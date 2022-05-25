@@ -5,10 +5,10 @@ const links = [
   {
     id: 1,
     text: 'all salads',
-    path: 'all-salads',
+    path: '/',
     icon: <MdOutlineFoodBank />,
   },
-  { id: 2, text: 'add salad', path: '/', icon: <MdSearch /> },
+  { id: 2, text: 'add salad', path: 'add-salad', icon: <MdSearch /> },
 ];
 
 export default links;

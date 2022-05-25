@@ -6,27 +6,50 @@ import {
 import { Link } from 'react-router-dom';
 import StyledSalad from './StyledSalad';
 import SaladInfo from './../saladInfo/SaladInfo';
-
 import moment from 'moment';
+import {
+  deleteSalad,
+  setEditSalad,
+} from '../../../features/salad/saladSlice.js';
+import { useDispatch } from 'react-redux';
 
-const Salad = ({ name, id, targetStock, currentStock, size }) => {
-  const date = moment().format('MMM Do, YYYY');
+const Salad = ({
+  createdAt,
+  cost,
+  currentStock,
+  targetStock,
+  id,
+  name,
+  price,
+  size,
+}) => {
+  const dispatch = useDispatch();
+  const date = moment(createdAt).format('MMM Do, YYYY');
 
   return (
     <StyledSalad>
       <header>
-        {/* <div className='main-icon'>{salad.charAt(0)}</div> */}
+        <div className='main-icon'>{name.charAt(0)}</div>
         <div className='info'>
           <h5>{name}</h5>
           <span>{date}</span>
-          <p>{id}</p>
+          <p>{price}</p>
         </div>
       </header>
       <div className='content'>
         <div className='content-center'>
-          <SaladInfo icon={<MdShoppingCart />} text={currentStock} />
-          <SaladInfo icon={<MdOutlineShowChart />} text={targetStock} />
-          <SaladInfo icon={<MdProductionQuantityLimits />} text={size} />
+          <SaladInfo
+            icon={<MdShoppingCart />}
+            text={`Current Stock: ${currentStock}`}
+          />
+          <SaladInfo
+            icon={<MdOutlineShowChart />}
+            text={`Target Stock: ${targetStock}`}
+          />
+          <SaladInfo
+            icon={<MdProductionQuantityLimits />}
+            text={`Size: ${size}`}
+          />
           <div
             className={`status ${
               currentStock > 10 ? 'good-stock' : 'no-stock'
@@ -39,13 +62,25 @@ const Salad = ({ name, id, targetStock, currentStock, size }) => {
             <Link
               to='/add-salad'
               className='btn edit-btn'
-              onClick={() => console.log('clicked')}>
+              onClick={() =>
+                dispatch(
+                  setEditSalad({
+                    id,
+                    name,
+                    cost,
+                    currentStock,
+                    targetStock,
+                    price,
+                    size,
+                  })
+                )
+              }>
               Edit
             </Link>
             <button
               type='button'
               className='btn delete-btn'
-              onClick={() => console.log('clicked')}>
+              onClick={() => dispatch(deleteSalad(id))}>
               delete
             </button>
           </div>

@@ -1,16 +1,28 @@
 import StyledSearchContainer from './StyledSearchContainer';
 import FormRow from './../forms/formRow/FormRow';
 import FormRowSelect from './../forms/formRowSelect/FormRowSelect';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { saladSizes } from './../../utils/saladSizes';
+import {
+  handleChange,
+  clearFilters,
+} from '../../features/allSalads/allSaladsSlice.js';
 
 const SearchContainer = () => {
-  const saladOptions = ['small', 'medium', 'large'];
+  const { isLoading, search, searchType } = useSelector(
+    (store) => store.allSalads
+  );
+
+  const dispatch = useDispatch();
 
   const handleSearch = (e) => {
-    console.log('handle search');
+    if (isLoading) return;
+    dispatch(handleChange({ name: e.target.name, value: e.target.value }));
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('handle submit');
+    dispatch(clearFilters());
   };
 
   return (
@@ -22,7 +34,7 @@ const SearchContainer = () => {
           <FormRow
             type='text'
             name='search'
-            value='search'
+            value={search}
             handleChange={handleSearch}
           />
 
@@ -30,17 +42,17 @@ const SearchContainer = () => {
           <FormRowSelect
             labelText='type'
             name='searchType'
-            value='search type'
+            value={searchType}
             handleChange={handleSearch}
-            list={saladOptions}
+            list={saladSizes}
           />
           {/* sort */}
-          <FormRowSelect
+          {/* <FormRowSelect
             name='sort'
             value='sort'
             handleChange={handleSearch}
             list={saladOptions}
-          />
+          /> */}
           <button className='btn btn-block btn-danger' onClick={handleSubmit}>
             clear filters
           </button>

@@ -1,67 +1,140 @@
 import { FormRow, FormRowSelect } from '../../components';
 import StyledDashboardFormPage from './StyledDashboardFormPage';
+import { saladSizes } from './../../utils/saladSizes';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import {
+  handleChange,
+  clearValues,
+  createSalad,
+  editSalad,
+} from '../../features/salad/saladSlice.js';
+import { useEffect } from 'react';
+import { getAllProducts } from './../../features/allProducts/allProductsSlice';
 
 const AddSalad = () => {
+  const {
+    // isLoading,
+    name,
+    size,
+    id,
+    ingredients,
+    cost,
+    currentStock,
+    targetStock,
+    price,
+    isEditing,
+  } = useSelector((store) => store.salad);
+
+  const dispatch = useDispatch();
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log('submit');
+    if (!name || !targetStock || !currentStock) {
+      toast.error('Please fill out all fields');
+      return;
+    }
+    if (isEditing) {
+      dispatch(
+        editSalad({
+          saladId: id,
+          salad: {
+            name,
+            size,
+            ingredients,
+            currentStock,
+            targetStock,
+            price,
+            id,
+            cost,
+          },
+        })
+      );
+      return;
+    }
+    dispatch(
+      createSalad({ name, size, ingredients, currentStock, targetStock, price })
+    );
   };
 
   const handleSaladInput = (e) => {
-    console.log(e);
+    const name = e.target.name;
+    const value = e.target.value;
+    dispatch(handleChange({ name, value }));
   };
+
+  useEffect(() => {
+    if (!isEditing) {
+      dispatch(
+        handleChange({
+          name: { name },
+        })
+      );
+    }
+  }, [name, isEditing, dispatch]);
 
   return (
     <StyledDashboardFormPage>
       <form className='form'>
-        <h3>add salad</h3>
+        <h3>{isEditing ? 'edit salad' : 'add salad'}</h3>
         <div className='form-center'>
           {/* name */}
           <FormRow
             type='text'
             name='name'
-            value='name'
+            value={name}
             handleChange={handleSaladInput}
           />
           {/* size */}
-          <FormRow
+          <FormRowSelect
             type='text'
-            name='size'
-            value='size'
+            name='saladSize'
+            labelText='Salad Size'
+            value={size}
             handleChange={handleSaladInput}
+            list={saladSizes}
           />
           {/* target stock */}
           <FormRow
             type='number'
             name='targetStock'
             labelText='Target Stock'
-            value='target stock'
+            value={targetStock}
             handleChange={handleSaladInput}
           />
+          {/* current stock */}
           <FormRow
             type='number'
             name='currentStock'
             labelText='Current Stock'
+            value={currentStock}
             handleChange={handleSaladInput}
           />
 
           {/* product type*/}
           <FormRowSelect
-            name='productType'
-            labelText='Product'
-            value='product'
+            name='ingredients'
+            labelText='Ingredients'
+            value={ingredients}
             handleChange={handleSaladInput}
-            list={['tomato', 'pea', 'carrot']}
+            list={[{ name: 'tomatoe' }, { name: 'pea' }]}
           />
           <div className='btn-container'>
             <button
               type='button'
               className='btn btn-block clear-btn'
-              onClick={() => console.log('clear')}>
+              onClick={() => dispatch(clearValues())}>
               clear
             </button>
-            <button type='submit' className='btn btn-block submit-btn'>
+
+            <button
+              type='submit'
+              className='btn btn-block submit-btn'
+              onClick={handleSubmit}
+              // disabled={isLoading}
+            >
               submit
             </button>
           </div>

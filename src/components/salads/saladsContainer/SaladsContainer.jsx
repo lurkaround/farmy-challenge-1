@@ -1,16 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Salad from './../salad/Salad';
-
+import { useSelector, useDispatch } from 'react-redux';
 import StyledSaladsContainer from './StyledSaladsContainer';
-// import Loading from '../../loading/Loading';
-import { dataService } from './../../../utils/dataService';
+import Loading from '../../loading/Loading';
+// import { dataService } from './../../../utils/dataService';
+import { getAllSalads } from './../../../features/allSalads/allSaladsSlice';
 
 const SaladsContainer = () => {
-  const [salads, setSalads] = useState([]);
+  // const [salads, setSalads] = useState([]);
+
+  // useEffect(() => {
+  //   dataService.get('salads').then((response) => setSalads(response));
+  // }, [salads]);
+  const { salads, isLoading, search, searchStatus, searchType, sort } =
+    useSelector((store) => store.allSalads);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dataService.get('salads').then((response) => setSalads(response));
-  }, [salads]);
+    dispatch(getAllSalads());
+  }, [dispatch, salads, search, searchStatus, searchType, sort]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (salads.length === 0) {
     return (

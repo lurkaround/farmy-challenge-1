@@ -9,10 +9,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<SharedLayout />}>
-          <Route index element={<AddSalad />} />
-          <Route path='all-salads' element={<AllSalads />} />
+          <Route index element={<AllSalads />} />
+          <Route path='add-salad' element={<AddSalad />} />
         </Route>
-        {/* <Route path='landing' element={<Landing />} /> */}
         <Route path='*' element={<Error />} />
       </Routes>
       <ToastContainer position='top-center' />
