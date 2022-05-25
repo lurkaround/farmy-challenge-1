@@ -10,6 +10,15 @@ import {
 const initialState = {
   isLoading: false,
   isEditing: false,
+  name: '',
+  id: '',
+  editSaladId: '',
+  size: '',
+  ingredients: [],
+  cost: '',
+  targetStock: '',
+  currentStock: '',
+  price: '',
 };
 
 export const createSalad = createAsyncThunk(

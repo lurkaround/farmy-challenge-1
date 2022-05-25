@@ -8,6 +8,7 @@ import { clearValues } from './saladSlice';
 
 export const createSaladThunk = async (salad, thunkAPI) => {
   try {
+    console.log(salad);
     const resp = await dataService.create('salads', salad);
     thunkAPI.dispatch(clearValues());
     return resp;
@@ -18,7 +19,7 @@ export const createSaladThunk = async (salad, thunkAPI) => {
 export const deleteSaladThunk = async (id, thunkAPI) => {
   thunkAPI.dispatch(showLoading());
   try {
-    const resp = await dataService.delete(`/salads/${id}`);
+    const resp = await dataService.delete(`salads/${id}`);
     thunkAPI.dispatch(getAllSalads());
     return resp;
   } catch (error) {
@@ -28,7 +29,7 @@ export const deleteSaladThunk = async (id, thunkAPI) => {
   }
 };
 export const editSaladThunk = async ({ saladId, salad }, thunkAPI) => {
-  console.log(salad);
+  console.log(salad, saladId);
   try {
     const resp = await dataService.update(`salads/${saladId}`, salad);
 

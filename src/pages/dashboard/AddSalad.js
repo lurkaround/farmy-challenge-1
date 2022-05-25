@@ -15,16 +15,17 @@ import { getAllProducts } from './../../features/allProducts/allProductsSlice';
 
 const AddSalad = () => {
   const {
-    // isLoading,
+    isLoading,
+    isEditing,
     name,
-    size,
     id,
+    editSaladId,
+    size,
     ingredients,
     cost,
-    currentStock,
     targetStock,
+    currentStock,
     price,
-    isEditing,
   } = useSelector((store) => store.salad);
 
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const AddSalad = () => {
     if (isEditing) {
       dispatch(
         editSalad({
-          saladId: id,
+          saladId: editSaladId,
           salad: {
             name,
             size,
@@ -73,7 +74,7 @@ const AddSalad = () => {
         })
       );
     }
-  }, [name, isEditing, dispatch]);
+  }, [dispatch, isEditing, name]);
 
   return (
     <StyledDashboardFormPage>
@@ -86,15 +87,6 @@ const AddSalad = () => {
             name='name'
             value={name}
             handleChange={handleSaladInput}
-          />
-          {/* size */}
-          <FormRowSelect
-            type='text'
-            name='saladSize'
-            labelText='Salad Size'
-            value={size}
-            handleChange={handleSaladInput}
-            list={saladSizes}
           />
           {/* target stock */}
           <FormRow
@@ -111,6 +103,15 @@ const AddSalad = () => {
             labelText='Current Stock'
             value={currentStock}
             handleChange={handleSaladInput}
+          />
+          {/* size */}
+          <FormRowSelect
+            type='text'
+            name='saladSize'
+            labelText='Salad Size'
+            value={size}
+            handleChange={handleSaladInput}
+            list={saladSizes}
           />
 
           {/* product type*/}
@@ -133,8 +134,7 @@ const AddSalad = () => {
               type='submit'
               className='btn btn-block submit-btn'
               onClick={handleSubmit}
-              // disabled={isLoading}
-            >
+              disabled={isLoading}>
               submit
             </button>
           </div>
